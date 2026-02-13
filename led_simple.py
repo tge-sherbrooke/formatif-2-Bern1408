@@ -14,6 +14,7 @@ Câblage :
 """
 
 import time
+import random
 import RPi.GPIO as GPIO
 
 # Configuration des broches GPIO
@@ -22,19 +23,43 @@ LED_VERTE = 27
 LED_JAUNE = 22
 
 # TODO : Configurer le mode BCM
-# GPIO.setmode(GPIO.???)
+GPIO.setmode(GPIO.BCM)
 
 # TODO : Configurer les broches en sortie
-# GPIO.setup(..., GPIO.OUT)
+GPIO.setup([LED_ROUGE, LED_VERTE, LED_JAUNE], GPIO.OUT)
+
+def gambling():
+    rand = random.randint(25, 40)
+    color = (17, 27, 22)
+    cpt = 0
+
+    for i in range(rand - 1):
+        GPIO.output(color[cpt], GPIO.HIGH)
+        time.sleep(0.1)
+        GPIO.output(color[cpt], GPIO.LOW)
+        time.sleep(0.1)
+        if cpt == 2:
+            cpt = 0
+        else:
+            cpt += 1
+    GPIO.output(color[cpt], GPIO.HIGH)
+    time.sleep(3)
+    eteindre_toutes()
 
 def allumer_toutes():
     """Allume toutes les LEDs."""
     # TODO : Implémenter
+    GPIO.output(LED_ROUGE, GPIO.HIGH)
+    GPIO.output(LED_VERTE, GPIO.HIGH)
+    GPIO.output(LED_JAUNE, GPIO.HIGH)
     pass
 
 def eteindre_toutes():
     """Éteint toutes les LEDs."""
     # TODO : Implémenter
+    GPIO.output(LED_ROUGE, GPIO.LOW)
+    GPIO.output(LED_VERTE, GPIO.LOW)
+    GPIO.output(LED_JAUNE, GPIO.LOW)
     pass
 
 def main():
@@ -47,13 +72,15 @@ def main():
         while True:
             # TODO : Allumer chaque LED une par une
             # avec 1 seconde d'intervalle
+            gambling()
+            time.sleep(1)
             pass
 
     except KeyboardInterrupt:
         print("\nAu revoir!")
     finally:
         # TODO : Nettoyer les GPIO avant de quitter
-        # GPIO.cleanup()
+        GPIO.cleanup()
         pass
 
 if __name__ == "__main__":
